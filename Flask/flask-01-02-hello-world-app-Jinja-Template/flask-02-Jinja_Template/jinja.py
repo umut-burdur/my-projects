@@ -13,4 +13,5 @@ def number():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) #add 'port=2000' in parant. to change ports
+    # app.run(debug=True) #add 'port=2000' in parant. to change ports
+    app.run(host= '0.0.0.0', port=80)

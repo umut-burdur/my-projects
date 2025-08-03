@@ -13,11 +13,14 @@ def lcm(num1,num2):
     return min(common_multiplications)
 
 
+
 # Create a function named `index` which uses template file named `index.html` 
 # send two numbers as template variable to the app.py and assign route of no path ('/') 
 @app.route("/")
 def index():
     return render_template("index.html", methods=["GET"])
+
+
 
 
 # calculate sum of them using "lcm" function, then sent the result to the 
@@ -28,11 +31,11 @@ def calculate():
     if request.method == "POST":
         num1 = request.form.get("number1")
         num2 = request.form.get("number2")
-        return render_template("result.html", result1 = num1, result2 = num2, lcm = lcm(int(num1),int(num2)), developer_name = 'Umut Burdur')
+        return render_template("result.html", result1 = num1, result2 = num2, lcm = lcm(int(num1),int(num2)), developer_name = 'osvaldo')
     else:
-        return render_template("result.html", developer_name = "Umut Burdur")
+        return render_template("result.html", developer_name = "osvaldo")
 
 # Add a statement to run the Flask application which can be debugged.
 if __name__== "__main__":
-    #app.run(debug=True)
-    app.run(host='0.0.0.0', port=80)
+    app.run(debug=True)
+    # app.run(host='0.0.0.0', port=8081)

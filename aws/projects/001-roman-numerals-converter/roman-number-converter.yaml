@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Cloudformation template for Roman Number Converter App. This template creates Python Flask Web Application.
+Parameters:
+  KeyName:
+    Description: Select your keypair
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: first-key
+  
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+
+Resources:
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow 22 and 80 port # Required
+      SecurityGroupIngress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80  
+  
+  WebserverHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroupIds: 
+        - !Ref WebSecurityGroup
+      Tags: 
+        - Key: Name
+          Value: !Sub Web Server of ${AWS::StackName}
+      UserData: 
+        !Base64 |
+          #! /bin/bash
+          yum update -y
+          yum install python3 -y
+          pip3 install flask
+          yum install git -y
+          cd /home/ec2-user
+          FOLDER="https://raw.githubusercontent.com/umut-burdur/my-projects/refs/heads/main/aws/projects/001-roman-numerals-converter/"
+          wget ${FOLDER}/roman-numerals-converter-app.py
+          mkdir templates && cd templates
+          wget ${FOLDER}/templates/index.html
+          wget ${FOLDER}/templates/result.html
+          cd ..
+          python3 roman-numerals-converter-app.py
+  
+Outputs:
+  WebSiteURL:
+    Value: !Sub http://${WebserverHost.PublicDnsName}
+    

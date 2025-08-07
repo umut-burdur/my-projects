@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This CFN template create ASG and ALB with ASG Target Tracking Policy via Cloudformation template.
+
+Parameters:
+  myVPC:
+    Description: Choose your VPC
+    Type: AWS::EC2::VPC::Id
+
+
+
+Mappings:
+
+
+Resources:
+  mySecGrpforASG:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: Allow http and ssh to client host
+    VpcId: !Ref myVPC
+    SecurityGroupIngress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+
+  myTargetGrpforASG: #32. dk da kaldın target group yazacaksın
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: false
+      HealthCheckIntervalSeconds: "Number"
+      HealthCheckPath: "String"
+      HealthCheckPort: "String"
+      HealthCheckProtocol: "String"
+      HealthCheckTimeoutSeconds: "Number"
+      HealthyThresholdCount: "Number"
+      IpAddressType: "String"
+      Matcher:
+        GrpcCode: "String"
+        HttpCode: "String"
+      Name: "String"
+      Port: "Number"
+      Protocol: "String"
+      ProtocolVersion: "String"
+      Tags: 
+        - Key: "String"
+          Value: "String"
+      TargetGroupAttributes: 
+        - Key: "String"
+          Value: "String"
+      TargetType: "String"
+      Targets: 
+        - AvailabilityZone: "String"
+          Id: "String"
+          Port: "Number"
+      UnhealthyThresholdCount: "Number"
+      VpcId: "String"
+
+Outputs:
